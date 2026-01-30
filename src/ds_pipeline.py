@@ -1,4 +1,5 @@
 from sklearn.datasets import fetch_california_housing
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -46,3 +47,36 @@ mlp = MLPRegressor(
 )
 
 mlp.fit(X_train_scaled, y_train)
+
+#Adding training predictions
+train_preds = mlp.predict(X_train_scaled)
+
+#training performance metrics
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
+def metrics_row(name, y_train, train_preds):
+    return {
+        "split": name,
+        "R2": r2_score(y_train, train_preds),
+        "MAE": mean_absolute_error(y_train, train_preds),
+        "MAPE": mean_absolute_percentage_error(y_train, train_preds),
+    }
+
+metrics_df = pd.DataFrame([metrics_row("train", y_train, train_preds)])
+
+print("Training Performance Metrics:")
+print(metrics_df.to_string(index=False))
+
+#Plotting model performance on training data
+plt.figure(figsize=(8, 8))
+plt.scatter(y_train, train_preds, alpha=0.3)
+low = min(np.min(y_train), np.min(train_preds))
+high = max(np.max(y_train), np.max(train_preds))
+plt.plot([low, high], [low, high], color="red", linestyle="--") #ref line
+plt.xlabel("Actual MedHouseVal")
+plt.ylabel("Predicted MedHouseVal")
+plt.title("MLP Regressor: Actual vs. Predicted MedHouseVal on Training Data")
+
+#saving plot
+plt.savefig("figures/train_actual_vs_pred.png")
+plt.close()
+print("Training performance plot saved as 'figures/train_actual_vs_pred.png'")
