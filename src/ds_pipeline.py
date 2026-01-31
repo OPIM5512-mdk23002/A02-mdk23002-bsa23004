@@ -80,3 +80,25 @@ plt.title("MLP Regressor: Actual vs. Predicted MedHouseVal on Training Data")
 plt.savefig("figures/train_actual_vs_pred.png")
 plt.close()
 print("Training performance plot saved as 'figures/train_actual_vs_pred.png'")
+
+# Test predictions
+test_preds = mlp.predict(X_test_scaled)
+
+# Plotting model performance on test data
+plt.figure(figsize=(8, 8))
+plt.scatter(y_test, test_preds, alpha=0.3)
+
+low = min(np.min(y_test), np.min(test_preds))
+high = max(np.max(y_test), np.max(test_preds))
+plt.plot([low, high], [low, high], color="red", linestyle="--")  # ref line
+
+plt.xlabel("Actual MedHouseVal")
+plt.ylabel("Predicted MedHouseVal")
+plt.title("MLP Regressor: Actual vs. Predicted MedHouseVal on Test Data")
+
+# Saving plot
+plt.savefig("figures/test_actual_vs_pred.png")
+plt.close()
+
+print("Test performance plot saved as 'figures/test_actual_vs_pred.png'")
+
